@@ -1,0 +1,22 @@
+[
+    {
+        "name": "First Category",
+        "description": "First Description",
+        "slug": "First Slug"
+    },
+    {
+        "name": "Second Category",
+        "description": "Second Description",
+        "slug": "Second Slug"
+    },
+    {
+        "name": "Third Category",
+        "description": "Third Description",
+        "slug": "Third Slug"
+    },
+    {
+        "name": "Fourth Category",
+        "description": "Fourth Description",
+        "slug": "Fourth Slug"
+    }
+]
