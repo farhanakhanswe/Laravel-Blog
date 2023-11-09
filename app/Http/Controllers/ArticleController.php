@@ -10,6 +10,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\Web\Article\StoreArticleRequest;
 use App\Http\Requests\Web\Article\UpdateArticleRequest;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 
 class ArticleController extends Controller
 {
@@ -28,7 +30,7 @@ class ArticleController extends Controller
         return view('web.articles.create', compact('categories', 'tags'));
     }
 
-    public function store(StoreArticleRequest $request)
+    public function store(StoreArticleRequest $request): RedirectResponse
     {
         $article = Auth::user()->articles()->create([
             'slug' => Str::slug($request->title),
@@ -55,7 +57,7 @@ class ArticleController extends Controller
         return view('web.articles.edit', compact('article', 'categories', 'tags'));
     }
 
-    public function update(UpdateArticleRequest $request, Article $article)
+    public function update(UpdateArticleRequest $request, Article $article): RedirectResponse
     {
         $article->update([
             'slug' => Str::slug($request->title),
@@ -68,8 +70,10 @@ class ArticleController extends Controller
         return redirect(route('my-articles'))->with('success', 'Article updated successfully!');
     }
 
-    public function destroy(Article $article)
+    public function destroy(Article $article): RedirectResponse
     {
-        //
+        $article->delete();
+
+        return back()->with('success', 'Article deleted successfully!');
     }
 }
