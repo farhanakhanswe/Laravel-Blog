@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Article;
 use Illuminate\Http\Request;
 
 class ArticleController extends Controller
@@ -11,7 +12,9 @@ class ArticleController extends Controller
      */
     public function index()
     {
-        //
+        $articles = Article::with('tags')->latest()->simplePaginate(5);
+
+        return view('web.articles.index',compact('articles'));
     }
 
     /**
@@ -33,9 +36,9 @@ class ArticleController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Article $article)
     {
-        //
+        return view('web.articles.show', compact('article'));
     }
 
     /**

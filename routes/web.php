@@ -1,8 +1,10 @@
 <?php
 
+use App\Models\Article;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\ProfileController;
-use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,11 +18,14 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
-});
+    return redirect(route('articles.index'));
+})->name('home');
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+
+    $articles = Auth::user()->articles;
+    return view('dashboard', compact('articles'));
+
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::resource('/articles', ArticleController::class)->only(['index','show']);
