@@ -20,7 +20,7 @@ class Tag extends Model
         return $this->belongsToMany(Article::class);
     }
 
-    public static function getAllTagIdsAndNames()
+    protected static function getAllTagIdsAndNames()
     {
         return self::pluck('name', 'id');
     }

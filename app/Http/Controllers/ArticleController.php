@@ -47,15 +47,25 @@ class ArticleController extends Controller
         return view('web.articles.show', compact('article'));
     }
 
-    public function edit(UpdateArticleRequest $article)
+    public function edit(Article $article)
     {
         $categories = Category::getAllCategoryIdsAndNames();
         $tags = Tag::getAllTagIdsAndNames();
+
+        return view('web.articles.edit', compact('article', 'categories', 'tags'));
     }
 
-    public function update(Request $request, Article $article)
+    public function update(UpdateArticleRequest $request, Article $article)
     {
-        //
+        $article->update([
+            'slug' => Str::slug($request->title),
+            'category_id' => $request->category,
+            'status' => $request->status === "on"
+        ] + $request->validated());
+
+        $article->tags()->sync($request->tags);
+
+        return redirect(route('my-articles'))->with('success', 'Article updated successfully!');
     }
 
     public function destroy(Article $article)

@@ -21,7 +21,7 @@ class Category extends Model
         return $this->hasMany(Article::class);
     }
 
-    public static function getAllCategoryIdsAndNames()
+    protected static function getAllCategoryIdsAndNames()
     {
         return self::pluck('name', 'id');
     }
