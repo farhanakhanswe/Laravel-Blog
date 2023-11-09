@@ -2,65 +2,63 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Tag;
 use App\Models\Article;
+use App\Models\Category;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\Web\Article\StoreArticleRequest;
+use App\Http\Requests\Web\Article\UpdateArticleRequest;
 
 class ArticleController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        $articles = Article::with('tags')->latest()->simplePaginate(5);
+        $articles = Article::eagerLoadAllArticlesWithTagsWithSimplePagination();
 
-        return view('web.articles.index',compact('articles'));
+        return view('web.articles.index', compact('articles'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        $categories = Category::getAllCategoryIdsAndNames();
+        $tags = Tag::getAllTagIdsAndNames();
+
+        return view('web.articles.create', compact('categories', 'tags'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function store(StoreArticleRequest $request)
     {
-        //
+        $article = Auth::user()->articles()->create([
+            'slug' => Str::slug($request->title),
+            'user_id' => Auth::id(),
+            'category_id' => $request->category,
+            'status' => $request->status === "on"
+        ] + $request->validated());
+
+        $article->tags()->attach($request->tags);
+
+        return redirect(route('my-articles'))->with('success', 'Article has successfully been created!');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Article $article)
     {
         return view('web.articles.show', compact('article'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function edit(UpdateArticleRequest $article)
+    {
+        $categories = Category::getAllCategoryIdsAndNames();
+        $tags = Tag::getAllTagIdsAndNames();
+    }
+
+    public function update(Request $request, Article $article)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy(Article $article)
     {
         //
     }

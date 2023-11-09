@@ -40,4 +40,9 @@ class Article extends Model
     {
         return $this->belongsToMany(Tag::class);
     }
+
+    public static function eagerLoadAllArticlesWithTagsWithSimplePagination()
+    {
+        return self::with('tags')->latest()->simplePaginate(5);
+    }
 }

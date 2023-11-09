@@ -17,9 +17,9 @@
 <body>
 
     @include('layouts.web.navbar')
+    @include('include.flash_message')
     
     @yield('content')
-
 
     @yield('custom_js')
 
