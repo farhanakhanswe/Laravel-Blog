@@ -11,10 +11,18 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\Web\Article\StoreArticleRequest;
 use App\Http\Requests\Web\Article\UpdateArticleRequest;
 use Illuminate\Contracts\View\View;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
 
 class ArticleController extends Controller
 {
+    use AuthorizesRequests;
+
+    public function __construct()
+    {
+        $this->authorizeResource(Article::class, 'article');
+    }
+
     public function index()
     {
         $articles = Article::eagerLoadAllArticlesWithTagsWithSimplePagination();
@@ -71,7 +79,7 @@ class ArticleController extends Controller
     }
 
     public function destroy(Article $article): RedirectResponse
-    {
+    {       
         $article->delete();
 
         return back()->with('success', 'Article deleted successfully!');
